@@ -13,28 +13,6 @@ if (isset($config)) {
     die();
 }
 
-/**
- * Validate IP, Port or Host
- *
- * @param $address
- *
- * @return bool
- */
-function isValidIpPort($address): bool
-{
-    if ((filter_var($address, FILTER_VALIDATE_IP) || filter_var($address, FILTER_VALIDATE_URL) || $address === 'localhost')) {
-        return true;
-    } elseif (preg_match('~\b([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}):([0-9]{1,10}\b)~', $address, $matches)) {
-        if (! preg_match('/^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$/m', $matches[2], $arraystr)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    return false;
-}
-
 $target    = '../installation/';
 $canRemove = [];
 
@@ -69,7 +47,7 @@ if (isset($_POST['dbc'])) {
     $mysqli->set_opt(MYSQLI_OPT_READ_TIMEOUT, 3);
 
     foreach ($cred as $key => $check) {
-        if (isValidIpPort($check['host']) && ! empty($check['user']) && ! empty($check['pass']) && ! empty($check['db'])) {
+        if (! empty(check["host"]) && ! empty($check['user']) && ! empty($check['pass']) && ! empty($check['db'])) {
             $mysqli->connect($check['host'], $check['user'], $check['pass'], $check['db']);
             if (! $mysqli->connect_error) {
                 $status[$key] = true;
